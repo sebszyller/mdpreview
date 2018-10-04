@@ -1,5 +1,15 @@
 #!/bin/bash
 
+function getlink {
+    # use readlink -f if available
+    echo $(greadlink -f $1)
+}
+
+function openpdf {
+    # use xdg-open if available
+    $(open --wait-apps $1)
+}
+
 function find_md {
     passed=$1
     
@@ -10,13 +20,13 @@ function find_md {
         if [[ $len -eq 0 ]]; then
             echo "No md files found. Aborting."
         elif [[ $len -eq 1 ]]; then
-            preview $(readlink -f $passed/${mds[0]})
+            preview $(getlink $passed/${mds[0]})
         else
             echo "Found more than one md file. Going with the first one: ${mds[0]}"
-            preview $(readlink -f $passed/${mds[0]})
+            preview $(getlink $passed/${mds[0]})
         fi
     else
-        abs_path=$(readlink -f ${passed})
+        abs_path=$(getlink ${passed})
         ext="${abs_path#*.}"
 
         if [[ "$ext" == "md" ]]; then
@@ -28,14 +38,13 @@ function find_md {
 }
 
 function preview {
-    passed=$(readlink -f ${1})
+    passed=$(getlink ${1})
     cd $(dirname $passed)
-
     stem="${passed%%.*}"
     output="${stem}_temp_preview.pdf"
-    
+
     $(pandoc $passed -o $output)
-    $(xdg-open $output)
+    $(openpdf $output)
     $(rm $output)
 }
 
