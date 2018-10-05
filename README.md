@@ -1,5 +1,15 @@
 # mdpreview
 
+Simple script for previewing rendered _markdown_ files from the terminal. __Requires__ `pandoc`.
+
+## Usage
+
+The script creates a temporary pdf file that is rendered and then removed.
+
+- `preview.sh /path/to/file.md` - show the preview of the specified file
+- `preview.sh /path/to/dir` - search for the first markdown file in the directory and show its preview (shallow search)
+- `preview.sh` - like above but with `.` as directory argument 
+
 ## Linux vs macOS
 
 There are some differences between these two when it comes to the version and availability of certain commands. `xdg-open` is not installed by default on _macOS_ (but you can get it with `brew`). However, it is not needed since the built-in `open` is just as good if not better. Worth noting that by default `xdg-open` is blocking while `open` is not, hence `--wait-apps` needs to be added.
